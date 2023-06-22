@@ -29,17 +29,9 @@
  * Start Helper Functions
  * 
 */
-const navClickHandler = e => {
-  e.preventDefault();
-  console.log('e', e.target.textContent);
-  const section = document.querySelector(`section[data-nav='${e.target.textContent}']`)
-  const bcr = section.getBoundingClientRect();
-  console.log('bcr', bcr);
-  window.scrollTo({
-    top: bcr.y,
-    left: bcr.x,
-    behavior: "smooth",
-  });
+function elementInViewport(el) {
+  const bcr = el.getBoundingClientRect();
+  return bcr.top < 150 && bcr.bottom > 150;
 }
 
 
@@ -51,23 +43,16 @@ const navClickHandler = e => {
 
 // build the nav
 const navBarList = document.querySelector('#navbar__list');
-const df = document.createDocumentFragment();
-for (let index = 1; index <= 4; index++) {
-  const newLi = document.createElement('li');
-  const newDiv = document.createElement('div');
-  newDiv.innerHTML = `Section ${index}`;
-  newDiv.className = "menu__link";
-  newLi.appendChild(newDiv);
-  df.appendChild(newLi);
-}
-navBarList.addEventListener('click', navClickHandler)
-navBarList.appendChild(df);
+const menus = buildMenus();
+navBarList.appendChild(menus);
 
 
 // Add class 'active' to section when near top of viewport
+document.addEventListener('scroll', setSectionsAsActive)
 
 
 // Scroll to anchor ID using scrollTO event
+navBarList.addEventListener('click', linkClickHandler)
 
 
 /**
@@ -77,9 +62,34 @@ navBarList.appendChild(df);
 */
 
 // Build menu 
+function buildMenus() {
+  df = document.createDocumentFragment();
+  for (let index = 1; index <= 4; index++) {
+    const newLi = document.createElement('li');
+    const newDiv = document.createElement('div');
+    newDiv.innerHTML = `Section ${index}`;
+    newDiv.className = "menu__link";
+    newLi.appendChild(newDiv);
+    df.appendChild(newLi);
+  }
+  return df;
+}
 
 // Scroll to section on link click
+function linkClickHandler(e) {
+  const section = document.querySelector(`section[data-nav='${e.target.textContent}']`)
+  section.scrollIntoView({ behavior: "smooth" });
+}
 
 // Set sections as active
-
+function setSectionsAsActive(e) {
+  const sections = document.querySelectorAll('section');
+  for (const section of sections) {
+    if (elementInViewport(section)) {
+      section.className = "active";
+    } else {
+      section.className = "";
+    }
+  }
+}
 
