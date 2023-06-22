@@ -22,7 +22,7 @@
  * Define Global Variables
  * 
 */
-
+const navBarList = document.querySelector('#navbar__list');
 
 /**
  * End Global Variables
@@ -42,7 +42,6 @@ function elementInViewport(el) {
 */
 
 // build the nav
-const navBarList = document.querySelector('#navbar__list');
 const menus = buildMenus();
 navBarList.appendChild(menus);
 
@@ -68,7 +67,7 @@ function buildMenus() {
     const newLi = document.createElement('li');
     const newDiv = document.createElement('div');
     newDiv.innerHTML = `Section ${index}`;
-    newDiv.className = "menu__link";
+    newDiv.classList.add('menu__link');
     newLi.appendChild(newDiv);
     df.appendChild(newLi);
   }
@@ -86,9 +85,9 @@ function setSectionsAsActive(e) {
   const sections = document.querySelectorAll('section');
   for (const section of sections) {
     if (elementInViewport(section)) {
-      section.className = "active";
+      section.classList.add('active');
     } else {
-      section.className = "";
+      section.classList.remove('active');
     }
   }
 }
