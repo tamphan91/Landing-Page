@@ -74,20 +74,43 @@ function buildMenus() {
   return df;
 }
 
-// Scroll to section on link click
+// Scroll to section on link click and set menu link as active
 function linkClickHandler(e) {
   const section = document.querySelector(`section[data-nav='${e.target.textContent}']`)
   section.scrollIntoView({ behavior: "smooth" });
+
+  const menuList = document.getElementsByClassName('menu__link');
+
+  for (const menu of menuList) {
+    if (menu.textContent == e.target.textContent) {
+      menu.classList.add('active');
+    } else {
+      menu.classList.remove('active');
+    }
+  }
 }
 
 // Set sections as active
 function setSectionsAsActive(e) {
   const sections = document.querySelectorAll('section');
+  const menuList = document.getElementsByClassName('menu__link');
   for (const section of sections) {
     if (elementInViewport(section)) {
       section.classList.add('active');
+      for (const menu of menuList) {
+        if (menu.textContent == section.dataset.nav) {
+          menu.classList.add('active');
+        } else {
+          menu.classList.remove('active');
+        }
+      }
     } else {
       section.classList.remove('active');
+      for (const menu of menuList) {
+        if (menu.textContent == section.dataset.nav) {
+          menu.classList.remove('active');
+        }
+      }
     }
   }
 }
